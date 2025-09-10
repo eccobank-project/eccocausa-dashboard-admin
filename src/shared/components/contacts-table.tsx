@@ -1,6 +1,35 @@
+/** biome-ignore-all lint/performance/noImgElement: <no img element> */
 "use client";
 
-import { cn } from "@/lib/utils";
+import {
+  RiArrowDownSLine,
+  RiArrowUpSLine,
+  RiBardLine,
+  RiCheckLine,
+  RiCloseCircleLine,
+  RiDeleteBinLine,
+  RiErrorWarningLine,
+  RiFilter3Line,
+  RiMoreLine,
+  RiSearch2Line,
+  RiVerifiedBadgeFill,
+} from "@remixicon/react";
+import {
+  type ColumnDef,
+  type ColumnFiltersState,
+  type FilterFn,
+  flexRender,
+  getCoreRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type PaginationState,
+  type SortingState,
+  useReactTable,
+  type VisibilityState,
+} from "@tanstack/react-table";
+import { useEffect, useId, useMemo, useRef, useState, useTransition } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,7 +44,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Progress } from "@/components/ui/progress";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,44 +56,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  ColumnDef,
-  ColumnFiltersState,
-  FilterFn,
-  PaginationState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import {
-  RiArrowDownSLine,
-  RiArrowUpSLine,
-  RiErrorWarningLine,
-  RiCloseCircleLine,
-  RiDeleteBinLine,
-  RiBardLine,
-  RiFilter3Line,
-  RiSearch2Line,
-  RiVerifiedBadgeFill,
-  RiCheckLine,
-  RiMoreLine,
-} from "@remixicon/react";
-import { useEffect, useId, useMemo, useRef, useState, useTransition } from "react";
+import { Progress } from "@/components/ui/progress";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 type Item = {
   id: string;
@@ -83,33 +77,33 @@ type Item = {
 };
 
 const statusFilterFn: FilterFn<Item> = (row, columnId, filterValue: string[]) => {
-  if (!filterValue?.length) return true;
+  if (!filterValue?.length) {
+    return true;
+  }
   const status = row.getValue(columnId) as string;
   return filterValue.includes(status);
 };
 
-interface GetColumnsProps {
+type GetColumnsProps = {
   data: Item[];
   setData: React.Dispatch<React.SetStateAction<Item[]>>;
-}
+};
 
 const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
   {
     id: "select",
     header: ({ table }) => (
       <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
+        checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
       />
     ),
     cell: ({ row }) => (
       <Checkbox
+        aria-label="Select row"
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
       />
     ),
     size: 28,
@@ -121,13 +115,7 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     accessorKey: "name",
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
-        <img
-          className="rounded-full"
-          src={row.original.image}
-          width={32}
-          height={32}
-          alt={row.getValue("name")}
-        />
+        <img alt={row.getValue("name")} className="rounded-full" height={32} src={row.original.image} width={32} />
         <div className="font-medium">{row.getValue("name")}</div>
       </div>
     ),
@@ -144,16 +132,16 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     header: "Status",
     accessorKey: "status",
     cell: ({ row }) => (
-      <div className="flex items-center h-full">
+      <div className="flex h-full items-center">
         <Badge
-          variant="outline"
           className={cn(
-            "gap-1 py-0.5 px-2 text-sm",
+            "gap-1 px-2 py-0.5 text-sm",
             row.original.status === "Inactive" ? "text-muted-foreground" : "text-primary-foreground"
           )}
+          variant="outline"
         >
           {row.original.status === "Active" && (
-            <RiCheckLine className="text-emerald-500" size={14} aria-hidden="true" />
+            <RiCheckLine aria-hidden="true" className="text-emerald-500" size={14} />
           )}
           {row.original.status === "Inactive" && "- "}
           {row.original.status}
@@ -176,9 +164,9 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
       <div>
         <span className="sr-only">{row.original.verified ? "Verified" : "Not Verified"}</span>
         <RiVerifiedBadgeFill
-          size={20}
-          className={cn(row.original.verified ? "fill-emerald-600" : "fill-muted-foreground/50")}
           aria-hidden="true"
+          className={cn(row.original.verified ? "fill-emerald-600" : "fill-muted-foreground/50")}
+          size={20}
         />
       </div>
     ),
@@ -190,11 +178,11 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
     cell: ({ row }) => (
       <div className="flex items-center gap-3">
         <img
+          alt={row.original.referral.name}
           className="rounded-full"
+          height={20}
           src={row.original.referral.image}
           width={20}
-          height={20}
-          alt={row.original.referral.name}
         />
         <div className="text-muted-foreground">{row.original.referral.name}</div>
       </div>
@@ -226,7 +214,7 @@ const getColumns = ({ data, setData }: GetColumnsProps): ColumnDef<Item>[] => [
   {
     id: "actions",
     header: () => <span className="sr-only">Actions</span>,
-    cell: ({ row }) => <RowActions setData={setData} data={data} item={row.original} />,
+    cell: ({ row }) => <RowActions data={data} item={row.original} setData={setData} />,
     size: 60,
     enableHiding: false,
   },
@@ -260,10 +248,10 @@ export default function ContactsTable() {
         const res = await fetch(
           "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/users-02_mohkpe.json"
         );
-        const data = await res.json();
-        setData(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
+        const fetchedData = await res.json();
+        setData(fetchedData);
+      } catch (_error) {
+        // Handle error if needed
       } finally {
         setIsLoading(false);
       }
@@ -273,9 +261,7 @@ export default function ContactsTable() {
 
   const handleDeleteRows = () => {
     const selectedRows = table.getSelectedRowModel().rows;
-    const updatedData = data.filter(
-      (item) => !selectedRows.some((row) => row.original.id === item.id)
-    );
+    const updatedData = data.filter((item) => !selectedRows.some((row) => row.original.id === item.id));
     setData(updatedData);
     table.resetRowSelection();
   };
@@ -308,13 +294,17 @@ export default function ContactsTable() {
 
   // Update useMemo hooks with simplified dependencies
   const uniqueStatusValues = useMemo(() => {
-    if (!statusColumn) return [];
+    if (!statusColumn) {
+      return [];
+    }
     const values = Array.from(statusFacetedValues?.keys() ?? []);
     return values.sort();
   }, [statusColumn, statusFacetedValues]);
 
   const statusCounts = useMemo(() => {
-    if (!statusColumn) return new Map();
+    if (!statusColumn) {
+      return new Map();
+    }
     return statusFacetedValues ?? new Map();
   }, [statusColumn, statusFacetedValues]);
 
@@ -347,33 +337,35 @@ export default function ContactsTable() {
           {/* Filter by name */}
           <div className="relative">
             <Input
-              id={`${id}-input`}
-              ref={inputRef}
+              aria-label="Search by name"
               className={cn(
-                "peer min-w-60 ps-9 bg-background bg-gradient-to-br from-accent/60 to-accent",
+                "peer min-w-60 bg-background bg-gradient-to-br from-accent/60 to-accent ps-9",
                 Boolean(table.getColumn("name")?.getFilterValue()) && "pe-9"
               )}
-              value={(table.getColumn("name")?.getFilterValue() ?? "") as string}
+              id={`${id}-input`}
               onChange={(e) => table.getColumn("name")?.setFilterValue(e.target.value)}
               placeholder="Search by name"
+              ref={inputRef}
               type="text"
-              aria-label="Search by name"
+              value={(table.getColumn("name")?.getFilterValue() ?? "") as string}
             />
             <div className="pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 text-muted-foreground/60 peer-disabled:opacity-50">
-              <RiSearch2Line size={20} aria-hidden="true" />
+              <RiSearch2Line aria-hidden="true" size={20} />
             </div>
             {Boolean(table.getColumn("name")?.getFilterValue()) && (
               <button
-                className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/60 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 aria-label="Clear filter"
+                className="absolute inset-y-0 end-0 flex h-full w-9 items-center justify-center rounded-e-lg text-muted-foreground/60 outline-offset-2 transition-colors hover:text-foreground focus:z-10 focus-visible:outline-2 focus-visible:outline-ring/70 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
                 onClick={() => {
                   table.getColumn("name")?.setFilterValue("");
                   if (inputRef.current) {
                     inputRef.current.focus();
                   }
                 }}
+                type="button"
+                typeof="button"
               >
-                <RiCloseCircleLine size={16} aria-hidden="true" />
+                <RiCloseCircleLine aria-hidden="true" size={16} />
               </button>
             )}
           </div>
@@ -385,9 +377,9 @@ export default function ContactsTable() {
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button className="ml-auto" variant="outline">
-                  <RiDeleteBinLine className="-ms-1 opacity-60" size={16} aria-hidden="true" />
+                  <RiDeleteBinLine aria-hidden="true" className="-ms-1 opacity-60" size={16} />
                   Delete
-                  <span className="-me-1 ms-1 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70">
+                  <span className="-me-1 ms-1 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] font-medium text-[0.625rem] text-muted-foreground/70">
                     {table.getSelectedRowModel().rows.length}
                   </span>
                 </Button>
@@ -395,8 +387,8 @@ export default function ContactsTable() {
               <AlertDialogContent>
                 <div className="flex flex-col gap-2 max-sm:items-center sm:flex-row sm:gap-4">
                   <div
-                    className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border"
                     aria-hidden="true"
+                    className="flex size-9 shrink-0 items-center justify-center rounded-full border border-border"
                   >
                     <RiErrorWarningLine className="opacity-80" size={16} />
                   </div>
@@ -420,38 +412,28 @@ export default function ContactsTable() {
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline">
-                <RiFilter3Line
-                  className="size-5 -ms-1.5 text-muted-foreground/60"
-                  size={20}
-                  aria-hidden="true"
-                />
+                <RiFilter3Line aria-hidden="true" className="-ms-1.5 size-5 text-muted-foreground/60" size={20} />
                 Filter
                 {selectedStatuses.length > 0 && (
-                  <span className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70">
+                  <span className="-me-1 ms-3 inline-flex h-5 max-h-full items-center rounded border border-border bg-background px-1 font-[inherit] font-medium text-[0.625rem] text-muted-foreground/70">
                     {selectedStatuses.length}
                   </span>
                 )}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto min-w-36 p-3" align="end">
+            <PopoverContent align="end" className="w-auto min-w-36 p-3">
               <div className="space-y-3">
-                <div className="text-xs font-medium uppercase text-muted-foreground/60">Status</div>
+                <div className="font-medium text-muted-foreground/60 text-xs uppercase">Status</div>
                 <div className="space-y-3">
                   {uniqueStatusValues.map((value, i) => (
-                    <div key={value} className="flex items-center gap-2">
+                    <div className="flex items-center gap-2" key={value}>
                       <Checkbox
-                        id={`${id}-${i}`}
                         checked={selectedStatuses.includes(value)}
+                        id={`${id}-${i}`}
                         onCheckedChange={(checked: boolean) => handleStatusChange(checked, value)}
                       />
-                      <Label
-                        htmlFor={`${id}-${i}`}
-                        className="flex grow justify-between gap-2 font-normal"
-                      >
-                        {value}{" "}
-                        <span className="ms-2 text-xs text-muted-foreground">
-                          {statusCounts.get(value)}
-                        </span>
+                      <Label className="flex grow justify-between gap-2 font-normal" htmlFor={`${id}-${i}`}>
+                        {value} <span className="ms-2 text-muted-foreground text-xs">{statusCounts.get(value)}</span>
                       </Label>
                     </div>
                   ))}
@@ -461,11 +443,7 @@ export default function ContactsTable() {
           </Popover>
           {/* New filter button */}
           <Button variant="outline">
-            <RiBardLine
-              className="size-5 -ms-1.5 text-muted-foreground/60"
-              size={20}
-              aria-hidden="true"
-            />
+            <RiBardLine aria-hidden="true" className="-ms-1.5 size-5 text-muted-foreground/60" size={20} />
             New Filter
           </Button>
         </div>
@@ -475,19 +453,18 @@ export default function ContactsTable() {
       <Table className="table-fixed border-separate border-spacing-0 [&_tr:not(:last-child)_td]:border-b">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="hover:bg-transparent">
+            <TableRow className="hover:bg-transparent" key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
                   <TableHead
+                    className="relative h-9 select-none border-border border-y bg-sidebar first:rounded-l-lg first:border-l last:rounded-r-lg last:border-r"
                     key={header.id}
                     style={{ width: `${header.getSize()}px` }}
-                    className="relative h-9 select-none bg-sidebar border-y border-border first:border-l first:rounded-l-lg last:border-r last:rounded-r-lg"
                   >
                     {header.isPlaceholder ? null : header.column.getCanSort() ? (
                       <div
                         className={cn(
-                          header.column.getCanSort() &&
-                            "flex h-full cursor-pointer select-none items-center gap-2"
+                          header.column.getCanSort() && "flex h-full cursor-pointer select-none items-center gap-2"
                         )}
                         onClick={header.column.getToggleSortingHandler()}
                         onKeyDown={(e) => {
@@ -501,20 +478,8 @@ export default function ContactsTable() {
                       >
                         {flexRender(header.column.columnDef.header, header.getContext())}
                         {{
-                          asc: (
-                            <RiArrowUpSLine
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
-                          desc: (
-                            <RiArrowDownSLine
-                              className="shrink-0 opacity-60"
-                              size={16}
-                              aria-hidden="true"
-                            />
-                          ),
+                          asc: <RiArrowUpSLine aria-hidden="true" className="shrink-0 opacity-60" size={16} />,
+                          desc: <RiArrowDownSLine aria-hidden="true" className="shrink-0 opacity-60" size={16} />,
                         }[header.column.getIsSorted() as string] ?? null}
                       </div>
                     ) : (
@@ -526,23 +491,23 @@ export default function ContactsTable() {
             </TableRow>
           ))}
         </TableHeader>
-        <tbody aria-hidden="true" className="table-row h-1"></tbody>
+        <tbody aria-hidden="true" className="table-row h-1" />
         <TableBody>
           {isLoading ? (
             <TableRow className="hover:bg-transparent [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell className="h-24 text-center" colSpan={columns.length}>
                 Loading...
               </TableCell>
             </TableRow>
           ) : table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
-                key={row.id}
+                className="h-px border-0 hover:bg-accent/50 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 data-state={row.getIsSelected() && "selected"}
-                className="border-0 [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg h-px hover:bg-accent/50"
+                key={row.id}
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="last:py-0 h-[inherit]">
+                  <TableCell className="h-[inherit] last:py-0" key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
@@ -550,43 +515,42 @@ export default function ContactsTable() {
             ))
           ) : (
             <TableRow className="hover:bg-transparent [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg">
-              <TableCell colSpan={columns.length} className="h-24 text-center">
+              <TableCell className="h-24 text-center" colSpan={columns.length}>
                 No results.
               </TableCell>
             </TableRow>
           )}
         </TableBody>
-        <tbody aria-hidden="true" className="table-row h-1"></tbody>
+        <tbody aria-hidden="true" className="table-row h-1" />
       </Table>
 
       {/* Pagination */}
       {table.getRowModel().rows.length > 0 && (
         <div className="flex items-center justify-between gap-3">
-          <p className="flex-1 whitespace-nowrap text-sm text-muted-foreground" aria-live="polite">
-            Page{" "}
-            <span className="text-foreground">{table.getState().pagination.pageIndex + 1}</span> of{" "}
+          <p aria-live="polite" className="flex-1 whitespace-nowrap text-muted-foreground text-sm">
+            Page <span className="text-foreground">{table.getState().pagination.pageIndex + 1}</span> of{" "}
             <span className="text-foreground">{table.getPageCount()}</span>
           </p>
           <Pagination className="w-auto">
             <PaginationContent className="gap-3">
               <PaginationItem>
                 <Button
-                  variant="outline"
-                  className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
                   aria-label="Go to previous page"
+                  className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+                  disabled={!table.getCanPreviousPage()}
+                  onClick={() => table.previousPage()}
+                  variant="outline"
                 >
                   Previous
                 </Button>
               </PaginationItem>
               <PaginationItem>
                 <Button
-                  variant="outline"
-                  className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
                   aria-label="Go to next page"
+                  className="aria-disabled:pointer-events-none aria-disabled:opacity-50"
+                  disabled={!table.getCanNextPage()}
+                  onClick={() => table.nextPage()}
+                  variant="outline"
                 >
                   Next
                 </Button>
@@ -654,37 +618,32 @@ function RowActions({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <div className="flex justify-end">
-            <Button
-              size="icon"
-              variant="ghost"
-              className="shadow-none text-muted-foreground/60"
-              aria-label="Edit item"
-            >
-              <RiMoreLine className="size-5" size={20} aria-hidden="true" />
+            <Button aria-label="Edit item" className="text-muted-foreground/60 shadow-none" size="icon" variant="ghost">
+              <RiMoreLine aria-hidden="true" className="size-5" size={20} />
             </Button>
           </div>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-auto">
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={handleStatusToggle} disabled={isUpdatePending}>
+            <DropdownMenuItem disabled={isUpdatePending} onClick={handleStatusToggle}>
               {item.status === "Active" ? "Deactivate contact" : "Activate contact"}
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleVerifiedToggle} disabled={isUpdatePending}>
+            <DropdownMenuItem disabled={isUpdatePending} onClick={handleVerifiedToggle}>
               {item.verified ? "Unverify contact" : "Verify contact"}
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem
+            className="dark:data-[variant=destructive]:focus:bg-destructive/10"
             onClick={() => setShowDeleteDialog(true)}
             variant="destructive"
-            className="dark:data-[variant=destructive]:focus:bg-destructive/10"
           >
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+      <AlertDialog onOpenChange={setShowDeleteDialog} open={showDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you sure?</AlertDialogTitle>
@@ -695,9 +654,9 @@ function RowActions({
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isUpdatePending}>Cancel</AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleDelete}
-              disabled={isUpdatePending}
               className="bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40"
+              disabled={isUpdatePending}
+              onClick={handleDelete}
             >
               Delete
             </AlertDialogAction>

@@ -3,6 +3,9 @@
   "extends": ["ultracite"],
   // ignorar rutas
   "files": {
-    "experimentalScannerIgnores": ["@/components/ui"]
+    "experimentalScannerIgnores": [
+      "@/components/ui",
+      "@/shared/components/contacts-table"
+    ]
   }
 }
