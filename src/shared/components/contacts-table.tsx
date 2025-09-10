@@ -1,4 +1,4 @@
-/** biome-ignore-all lint/performance/noImgElement: <no img element> */
+/** biome-ignore-all lint/performance/noImgElement: <explanation> */
 "use client";
 
 import {
@@ -80,6 +80,7 @@ const statusFilterFn: FilterFn<Item> = (row, columnId, filterValue: string[]) =>
   if (!filterValue?.length) {
     return true;
   }
+
   const status = row.getValue(columnId) as string;
   return filterValue.includes(status);
 };
@@ -251,7 +252,7 @@ export default function ContactsTable() {
         const fetchedData = await res.json();
         setData(fetchedData);
       } catch (_error) {
-        // Handle error if needed
+        // Handle error appropriately
       } finally {
         setIsLoading(false);
       }
@@ -297,6 +298,7 @@ export default function ContactsTable() {
     if (!statusColumn) {
       return [];
     }
+
     const values = Array.from(statusFacetedValues?.keys() ?? []);
     return values.sort();
   }, [statusColumn, statusFacetedValues]);
@@ -363,7 +365,6 @@ export default function ContactsTable() {
                   }
                 }}
                 type="button"
-                typeof="button"
               >
                 <RiCloseCircleLine aria-hidden="true" size={16} />
               </button>
