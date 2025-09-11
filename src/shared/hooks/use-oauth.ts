@@ -1,13 +1,14 @@
+/** biome-ignore-all lint/suspicious/noConsole: <debugging console.log> */
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
 
 export type OAuthProvider = "google" | "azure";
 
-interface UseOAuthOptions {
+type UseOAuthOptions = {
   redirectTo?: string;
   onSuccess?: () => void;
   onError?: (error: string) => void;
-}
+};
 
 export const useOAuth = (options: UseOAuthOptions = {}) => {
   const [loading, setLoading] = useState(false);
@@ -32,7 +33,7 @@ export const useOAuth = (options: UseOAuthOptions = {}) => {
         const errorMessage = `Error al autenticarse con ${
           provider === "google" ? "Google" : "Microsoft"
         }: ${error.message}`;
-        
+
         if (options.onError) {
           options.onError(errorMessage);
         }
@@ -49,7 +50,7 @@ export const useOAuth = (options: UseOAuthOptions = {}) => {
       const errorMessage = `Error inesperado al autenticarse con ${
         provider === "google" ? "Google" : "Microsoft"
       }. Por favor, inténtalo de nuevo.`;
-      
+
       if (options.onError) {
         options.onError(errorMessage);
       }

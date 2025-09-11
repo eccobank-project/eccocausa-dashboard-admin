@@ -1,11 +1,7 @@
 import { Outlet } from "react-router-dom";
 
 function SidebarLayout() {
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }
 
 export default SidebarLayout;
