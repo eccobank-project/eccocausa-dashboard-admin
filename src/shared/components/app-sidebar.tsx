@@ -1,5 +1,15 @@
+import {
+  RiBardLine,
+  RiCodeSSlashLine,
+  RiLayoutLeftLine,
+  RiLeafLine,
+  RiLoginCircleLine,
+  RiLogoutBoxLine,
+  RiScanLine,
+  RiSettings3Line,
+  RiUserFollowLine,
+} from "@remixicon/react";
 import type * as React from "react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -13,19 +23,8 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import {
-  RiScanLine,
-  RiBardLine,
-  RiUserFollowLine,
-  RiCodeSSlashLine,
-  RiLoginCircleLine,
-  RiLayoutLeftLine,
-  RiSettings3Line,
-  RiLeafLine,
-  RiLogoutBoxLine,
-} from "@remixicon/react";
-import { TeamSwitcher } from "./team-switcher";
 import { SearchForm } from "./search-form";
+import { TeamSwitcher } from "./team-switcher";
 
 // This is sample data.
 const data = {
@@ -117,27 +116,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* We create a SidebarGroup for each parent. */}
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
-            <SidebarGroupLabel className="text-muted-foreground/60 uppercase">
-              {item.title}
-            </SidebarGroupLabel>
+            <SidebarGroupLabel className="text-muted-foreground/60 uppercase">{item.title}</SidebarGroupLabel>
             <SidebarGroupContent className="px-2">
               <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                {item.items.map((menuItem) => (
+                  <SidebarMenuItem key={menuItem.title}>
                     <SidebarMenuButton
                       asChild
                       className="group/menu-button h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
-                      isActive={item.isActive}
+                      isActive={menuItem.isActive}
                     >
-                      <a href={item.url}>
-                        {item.icon && (
-                          <item.icon
+                      <a href={menuItem.url}>
+                        {menuItem.icon && (
+                          <menuItem.icon
+                            aria-hidden="true"
                             className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
                             size={22}
-                            aria-hidden="true"
                           />
                         )}
-                        <span>{item.title}</span>
+                        <span>{menuItem.title}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -153,9 +150,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton className="h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
               <RiLogoutBoxLine
+                aria-hidden="true"
                 className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
                 size={22}
-                aria-hidden="true"
               />
               <span>Sign Out</span>
             </SidebarMenuButton>
