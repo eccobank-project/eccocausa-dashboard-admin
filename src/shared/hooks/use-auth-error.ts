@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-interface AuthError {
+type AuthError = {
   error: string;
   errorCode: string;
   errorDescription: string;
-}
+};
 
 export const useAuthError = () => {
   const [authError, setAuthError] = useState<AuthError | null>(null);
@@ -15,16 +15,19 @@ export const useAuthError = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const hashParams = new URLSearchParams(location.hash.substring(1));
-    
+
     // Check both search params and hash params for error information
     const error = searchParams.get("error") || hashParams.get("error");
-    const errorCode = searchParams.get("error_code") || hashParams.get("error_code");
-    const errorDescription = searchParams.get("error_description") || hashParams.get("error_description");
+    const errorCode =
+      searchParams.get("error_code") || hashParams.get("error_code");
+    const errorDescription =
+      searchParams.get("error_description") ||
+      hashParams.get("error_description");
 
     // Detect specific Supabase authentication errors
     if (
-      error === "server_error" && 
-      errorCode === "unexpected_failure" && 
+      error === "server_error" &&
+      errorCode === "unexpected_failure" &&
       errorDescription?.includes("Database error saving new user")
     ) {
       setAuthError({
@@ -47,8 +50,9 @@ export const useAuthError = () => {
     navigate("/auth/login", { replace: true });
   };
 
-  const isPermissionError = authError?.error === "server_error" && 
-    authError?.errorCode === "unexpected_failure" && 
+  const isPermissionError =
+    authError?.error === "server_error" &&
+    authError?.errorCode === "unexpected_failure" &&
     authError?.errorDescription?.includes("Database error saving new user");
 
   return {

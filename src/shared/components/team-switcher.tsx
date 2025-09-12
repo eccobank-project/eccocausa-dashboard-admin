@@ -37,9 +37,9 @@ export function TeamSwitcher({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground gap-3 [&>svg]:size-auto"
+              className="gap-3 data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground [&>svg]:size-auto"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-md overflow-hidden bg-sidebar-primary text-sidebar-primary-foreground">
+              <div className="flex aspect-square size-8 items-center justify-center overflow-hidden rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
                 {activeTeam && (
                   <img
                     src={activeTeam.logo}
@@ -67,7 +67,7 @@ export function TeamSwitcher({
             side="bottom"
             sideOffset={4}
           >
-            <DropdownMenuLabel className="uppercase text-muted-foreground/60 text-xs">
+            <DropdownMenuLabel className="text-muted-foreground/60 text-xs uppercase">
               Teams
             </DropdownMenuLabel>
             {teams.map((team, index) => (
@@ -76,7 +76,7 @@ export function TeamSwitcher({
                 onClick={() => setActiveTeam(team)}
                 className="gap-2 p-2"
               >
-                <div className="flex size-6 items-center justify-center rounded-md overflow-hidden">
+                <div className="flex size-6 items-center justify-center overflow-hidden rounded-md">
                   <img src={team.logo} width={36} height={36} alt={team.name} />
                 </div>
                 {team.name}

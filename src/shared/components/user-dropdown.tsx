@@ -33,8 +33,8 @@ export default function UserDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="max-w-64" align="end">
         <DropdownMenuLabel className="flex min-w-0 flex-col">
-          <span className="truncate text-sm font-medium text-foreground">Deus K.</span>
-          <span className="truncate text-xs font-normal text-muted-foreground">
+          <span className="truncate font-medium text-foreground text-sm">Deus K.</span>
+          <span className="truncate font-normal text-muted-foreground text-xs">
             deus.k@gmail.com
           </span>
         </DropdownMenuLabel>

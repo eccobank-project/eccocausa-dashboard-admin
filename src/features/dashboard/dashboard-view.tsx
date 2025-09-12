@@ -21,7 +21,7 @@ export const DashboardView = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset className="overflow-hidden px-4 md:px-6 lg:px-8 text-white">
+      <SidebarInset className="overflow-hidden px-4 text-white md:px-6 lg:px-8">
         <header className="flex h-16 shrink-0 items-center gap-2 border-b">
           <div className="flex flex-1 items-center gap-2 px-3">
             <SidebarTrigger className="-ms-4" />
@@ -41,17 +41,17 @@ export const DashboardView = () => {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="flex gap-3 ml-auto">
+          <div className="ml-auto flex gap-3">
             <FeedbackDialog />
             <UserDropdown />
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 lg:gap-6 py-4 lg:py-6">
+        <div className="flex flex-1 flex-col gap-4 py-4 lg:gap-6 lg:py-6">
           {/* Page intro */}
           <div className="flex items-center justify-between gap-4">
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold">Oilà, Larry!</h1>
-              <p className="text-sm text-muted-foreground">
+              <h1 className="font-semibold text-2xl">Oilà, Larry!</h1>
+              <p className="text-muted-foreground text-sm">
                 Here&rsquo;s an overview of your contacts. Manage or create new ones with ease!
               </p>
             </div>

@@ -31,9 +31,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (loading) {
     return (
-      <div className="grid place-items-center min-h-screen">
+      <div className="grid min-h-screen place-items-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+          <div className="mx-auto h-8 w-8 animate-spin rounded-full border-gray-900 border-b-2" />
           <p className="mt-2 text-gray-600">Verificando autenticación...</p>
         </div>
       </div>

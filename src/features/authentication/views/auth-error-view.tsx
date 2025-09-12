@@ -17,13 +17,13 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="mx-auto w-full max-w-md">
       {/* Header Section */}
-      <div className="text-center mb-8">
+      <div className="mb-8 text-center">
         <div className="mb-4">
-          <div className="w-16 h-16 mx-auto bg-destructive/10 rounded-full flex items-center justify-center border border-destructive/20">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border border-destructive/20 bg-destructive/10">
             <svg
-              className="w-8 h-8 text-destructive"
+              className="h-8 w-8 text-destructive"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -37,19 +37,19 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
             </svg>
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Acceso no autorizado</h1>
-        <p className="text-muted-foreground text-lg">
+        <h1 className="mb-2 font-bold text-3xl text-foreground">Acceso no autorizado</h1>
+        <p className="text-lg text-muted-foreground">
           Tu cuenta no tiene permisos para acceder a EccoBank
         </p>
       </div>
 
       {/* Main Error Card */}
-      <div className="bg-card p-8 rounded-2xl shadow-lg border border-border">
+      <div className="rounded-2xl border border-border bg-card p-8 shadow-lg">
         {/* Error Badge */}
-        <div className="flex items-center justify-center mb-6">
-          <div className="bg-destructive/10 text-destructive px-4 py-2 rounded-full text-sm font-medium border border-destructive/20">
+        <div className="mb-6 flex items-center justify-center">
+          <div className="rounded-full border border-destructive/20 bg-destructive/10 px-4 py-2 font-medium text-destructive text-sm">
             <div className="flex items-center gap-2">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
                   d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
@@ -62,11 +62,11 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
         </div>
 
         {/* Error Message */}
-        <div className="text-center mb-8">
-          <h2 className="text-xl font-semibold text-foreground mb-4">
+        <div className="mb-8 text-center">
+          <h2 className="mb-4 font-semibold text-foreground text-xl">
             No puedes acceder en este momento
           </h2>
-          <div className="bg-muted border border-border rounded-lg p-4 mb-6">
+          <div className="mb-6 rounded-lg border border-border bg-muted p-4">
             <p className="text-muted-foreground text-sm">
               <strong className="text-foreground">¿Por qué veo este mensaje?</strong>
               <br />
@@ -84,7 +84,7 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
         <div className="space-y-4">
           <Button
             onClick={handleReturnToLogin}
-            className="w-full bg-primary hover:bg-primary/90 text-primary-foreground py-3 px-6 rounded-xl font-semibold transition-all duration-200"
+            className="w-full rounded-xl bg-primary px-6 py-3 font-semibold text-primary-foreground transition-all duration-200 hover:bg-primary/90"
           >
             Volver al inicio de sesión
           </Button>
@@ -95,18 +95,18 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
               (window.location.href =
                 "mailto:soporte@eccobank.com?subject=Solicitud de acceso a EccoBank&body=Hola, necesito acceso a la plataforma EccoBank. Mi email de Google es: ")
             }
-            className="w-full border-2 border-border hover:border-border text-foreground hover:bg-muted py-3 px-6 rounded-xl font-semibold transition-all duration-200"
+            className="w-full rounded-xl border-2 border-border px-6 py-3 font-semibold text-foreground transition-all duration-200 hover:border-border hover:bg-muted"
           >
             Contactar soporte
           </Button>
         </div>
 
         {/* Help Information */}
-        <div className="mt-8 pt-6 border-t border-border">
+        <div className="mt-8 border-border border-t pt-6">
           <div className="space-y-3">
-            <div className="flex items-start gap-3 text-sm text-muted-foreground">
+            <div className="flex items-start gap-3 text-muted-foreground text-sm">
               <svg
-                className="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
+                className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -123,9 +123,9 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
                 Google.
               </div>
             </div>
-            <div className="flex items-start gap-3 text-sm text-muted-foreground">
+            <div className="flex items-start gap-3 text-muted-foreground text-sm">
               <svg
-                className="w-4 h-4 text-primary flex-shrink-0 mt-0.5"
+                className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -151,7 +151,7 @@ const AuthErrorView = ({ onReturnToLogin }: AuthErrorViewProps) => {
           ¿Problemas técnicos?{" "}
           <a
             href="mailto:soporte@eccobank.com"
-            className="text-primary hover:text-primary/80 font-medium"
+            className="font-medium text-primary hover:text-primary/80"
           >
             Reportar problema
           </a>

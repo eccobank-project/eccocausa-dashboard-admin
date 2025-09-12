@@ -16,7 +16,7 @@ export function SearchForm({ ...props }: React.ComponentProps<"form">) {
               <RiSearch2Line size={20} aria-hidden="true" />
             </div>
             <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center justify-center pe-2 text-muted-foreground">
-              <kbd className="inline-flex size-5 max-h-full items-center justify-center rounded bg-input px-1 font-[inherit] text-[0.625rem] font-medium text-muted-foreground/70">
+              <kbd className="inline-flex size-5 max-h-full items-center justify-center rounded bg-input px-1 font-[inherit] font-medium text-[0.625rem] text-muted-foreground/70">
                 /
               </kbd>
             </div>

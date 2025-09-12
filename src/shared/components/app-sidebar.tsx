@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 
 import {
   Sidebar,
@@ -110,14 +110,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
-        <hr className="border-t border-border mx-2 -mt-px" />
+        <hr className="-mt-px mx-2 border-border border-t" />
         <SearchForm className="mt-3" />
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
         {data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
-            <SidebarGroupLabel className="uppercase text-muted-foreground/60">
+            <SidebarGroupLabel className="text-muted-foreground/60 uppercase">
               {item.title}
             </SidebarGroupLabel>
             <SidebarGroupContent className="px-2">
@@ -126,7 +126,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      className="group/menu-button font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
+                      className="group/menu-button h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
                       isActive={item.isActive}
                     >
                       <a href={item.url}>
@@ -148,10 +148,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <hr className="border-t border-border mx-2 -mt-px" />
+        <hr className="-mt-px mx-2 border-border border-t" />
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton className="font-medium gap-3 h-9 rounded-md bg-gradient-to-r hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
+            <SidebarMenuButton className="h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto">
               <RiLogoutBoxLine
                 className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
                 size={22}

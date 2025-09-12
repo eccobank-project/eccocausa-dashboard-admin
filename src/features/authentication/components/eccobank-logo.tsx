@@ -23,13 +23,13 @@ export const EccoBankLogo: React.FC<{ className?: string }> = ({ className }) =>
           fill="white"
         />
       </svg>
-      <span className="text-3xl font-bold text-foreground">EccoBank</span>
+      <span className="font-bold text-3xl text-foreground">EccoBank</span>
     </div>
   );
 };
 
 export const GoogleIcon: React.FC = () => (
-  <svg className="w-5 h-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg className="h-5 w-5" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -59,7 +59,7 @@ export const GoogleIcon: React.FC = () => (
 );
 
 export const MicrosoftIcon: React.FC = () => (
-  <svg className="w-5 h-5" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg className="h-5 w-5" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M1 1H9.5V9.5H1V1Z" fill="#F25022" />
     <path d="M11.5 1H20V9.5H11.5V1Z" fill="#7FBA00" />
     <path d="M1 11.5H9.5V20H1V11.5Z" fill="#00A4EF" />
