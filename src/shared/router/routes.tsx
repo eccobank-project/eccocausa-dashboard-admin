@@ -1,18 +1,17 @@
 import { lazy } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-
-import SidebarLayout from "@/shared/layouts/sidebar-layout";
 import AuthLayout from "@/features/authentication/layouts/auth-layout";
-import { ProtectedRoute } from "@/shared/components/protected-route";
-import { PublicRoute } from "@/shared/components/public-route";
-
 import AuthErrorView from "@/features/authentication/views/auth-error-view";
 import LoginView from "@/features/authentication/views/login-view";
 import RegisterView from "@/features/authentication/views/register-view";
 import { DashboardView } from "@/features/dashboard/dashboard-view";
+import { ProtectedRoute } from "@/shared/components/protected-route";
+import { PublicRoute } from "@/shared/components/public-route";
+import SidebarLayout from "@/shared/layouts/sidebar-layout";
 
 const CollectorsView = lazy(() => import("../../features/collectors/collectors-view"));
 const CustomersView = lazy(() => import("../../features/customers/customers-view"));
+const MapView = lazy(() => import("../../features/map/map-view"));
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path: "customers",
         element: <CustomersView />,
+      },
+      {
+        path: "map",
+        element: <MapView />,
       },
     ],
   },
