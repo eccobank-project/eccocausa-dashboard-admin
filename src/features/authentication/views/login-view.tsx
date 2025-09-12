@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useOAuth } from "@/shared/hooks/use-oauth";
+import { getOAuthRedirectUrl } from "@/shared/lib/url";
 import { GoogleIcon } from "../components/eccobank-logo";
 
 type LocationState = {
@@ -18,7 +19,7 @@ const LoginView = () => {
   const from = (location.state as LocationState)?.from?.pathname || "/";
 
   const { loading, signInWithOAuth } = useOAuth({
-    redirectTo: `${window.location.origin}${from}`,
+    redirectTo: getOAuthRedirectUrl(from),
     onError: setError,
     onSuccess: () => {
       // OAuth success will be handled by redirect
@@ -64,9 +65,7 @@ const LoginView = () => {
         <div className="space-y-4">
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px flex-1 bg-border" />
-            <span className="px-3 font-medium text-muted-foreground text-xs">
-              AUTENTICACIÓN CORPORATIVA
-            </span>
+            <span className="px-3 font-medium text-muted-foreground text-xs">AUTENTICACIÓN CORPORATIVA</span>
             <div className="h-px flex-1 bg-border" />
           </div>
 
@@ -87,9 +86,7 @@ const LoginView = () => {
                 <span className="font-semibold text-foreground text-lg">
                   {loading ? "Autenticando..." : "Iniciar sesión con Google"}
                 </span>
-                <div className="mt-1 text-muted-foreground text-xs">
-                  Utiliza tu cuenta corporativa de Google
-                </div>
+                <div className="mt-1 text-muted-foreground text-xs">Utiliza tu cuenta corporativa de Google</div>
               </div>
               {loading && (
                 <div className="flex-shrink-0">
@@ -138,8 +135,7 @@ const LoginView = () => {
         <div className="border-border border-t pt-4">
           <div className="space-y-3 text-center">
             <p className="text-muted-foreground text-xs leading-relaxed">
-              Al acceder al sistema, confirmas que eres un usuario autorizado y aceptas cumplir con
-              las{" "}
+              Al acceder al sistema, confirmas que eres un usuario autorizado y aceptas cumplir con las{" "}
               <a className="font-medium text-primary underline hover:text-primary/80" href="/">
                 políticas de seguridad corporativa
               </a>{" "}

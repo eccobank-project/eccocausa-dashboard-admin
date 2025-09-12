@@ -1,6 +1,7 @@
 /** biome-ignore-all lint/suspicious/noConsole: <debugging console.log> */
 import { useState } from "react";
 import { supabase } from "../lib/supabase";
+import { getOAuthRedirectUrl } from "../lib/url";
 
 export type OAuthProvider = "google" | "azure";
 
@@ -20,7 +21,7 @@ export const useOAuth = (options: UseOAuthOptions = {}) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: options.redirectTo || `${window.location.origin}/`,
+          redirectTo: options.redirectTo || getOAuthRedirectUrl("/"),
           queryParams: {
             access_type: "offline",
             prompt: "consent",
