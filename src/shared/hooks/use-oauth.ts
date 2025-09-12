@@ -8,7 +8,42 @@ export type OAuthProvider = "google" | "azure";
 type UseOAuthOptions = {
   redirectTo?: string;
   onSuccess?: () => void;
-  onError?: (error: string) => void;
+  onError?: (errorMessage: string) => void;
+};
+
+const getProviderDisplayName = (provider: OAuthProvider): string => {
+  return provider === "google" ? "Google" : "Microsoft";
+};
+
+const createErrorMessage = (provider: OAuthProvider, error: string): string => {
+  return `Error al autenticarse con ${getProviderDisplayName(provider)}: ${error}`;
+};
+
+const createGenericErrorMessage = (provider: OAuthProvider): string => {
+  return `Error inesperado al autenticarse con ${getProviderDisplayName(provider)}. Por favor, inténtalo de nuevo.`;
+};
+
+const handleOAuthError = (
+  provider: OAuthProvider,
+  error: string,
+  onError?: (errorMessage: string) => void
+) => {
+  console.error(`${provider} OAuth error:`, error);
+  const errorMessage = createErrorMessage(provider, error);
+  onError?.(errorMessage);
+
+  return { success: false, error: errorMessage };
+};
+
+const handleOAuthException = (
+  provider: OAuthProvider,
+  err: unknown,
+  onError?: (errorMessage: string) => void
+) => {
+  console.error(`${provider} OAuth exception:`, err);
+  const errorMessage = createGenericErrorMessage(provider);
+  onError?.(errorMessage);
+  return { success: false, error: errorMessage };
 };
 
 export const useOAuth = (options: UseOAuthOptions = {}) => {
@@ -30,15 +65,7 @@ export const useOAuth = (options: UseOAuthOptions = {}) => {
       });
 
       if (error) {
-        console.error(`${provider} OAuth error:`, error);
-        const errorMessage = `Error al autenticarse con ${
-          provider === "google" ? "Google" : "Microsoft"
-        }: ${error.message}`;
-
-        if (options.onError) {
-          options.onError(errorMessage);
-        }
-        return { success: false, error: errorMessage };
+        return handleOAuthError(provider, error.message, options.onError);
       }
 
       if (options.onSuccess) {
@@ -47,15 +74,7 @@ export const useOAuth = (options: UseOAuthOptions = {}) => {
 
       return { success: true, error: null };
     } catch (err) {
-      console.error(`${provider} OAuth exception:`, err);
-      const errorMessage = `Error inesperado al autenticarse con ${
-        provider === "google" ? "Google" : "Microsoft"
-      }. Por favor, inténtalo de nuevo.`;
-
-      if (options.onError) {
-        options.onError(errorMessage);
-      }
-      return { success: false, error: errorMessage };
+      return handleOAuthException(provider, err, options.onError);
     } finally {
       setLoading(false);
     }
