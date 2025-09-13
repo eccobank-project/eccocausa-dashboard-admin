@@ -1,7 +1,7 @@
 import { supabase } from "@/shared/lib/supabase";
 import type { AuthorizedEmails } from "../types/actionsTypes";
 
-// Constants for table names
+// Constants for table names variables
 const AuthorizedEmailsTable = "correos_autorizados";
 
 // Create a new authorized email
