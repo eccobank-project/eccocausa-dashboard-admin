@@ -9,7 +9,15 @@ export type AuthorizedUser = {
   lastLogin?: Date;
 };
 
-export type UserRole = "admin" | "manager" | "collector" | "viewer";
+// UserRole representa el ID numérico del rol en la base de datos
+export type UserRole = 1 | 3 | 4;
+
+// Mapeo de IDs a nombres para mostrar en la UI
+export const ROLE_NAMES: Record<UserRole, string> = {
+  1: "superadmin",
+  3: "admin",
+  4: "recolector",
+};
 
 export type CreateUserRequest = {
   email: string;

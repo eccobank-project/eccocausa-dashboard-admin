@@ -3,7 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { AuthorizedUser } from "../types";
+import type { AuthorizedUser, UserRole } from "../types";
+import { ROLE_NAMES } from "../types";
 
 type AuthorizedUsersTableProps = {
   users: AuthorizedUser[];
@@ -12,19 +13,20 @@ type AuthorizedUsersTableProps = {
   onDeleteUser: (userId: string) => void;
 };
 
-const getRoleColor = (role: string) => {
-  switch (role) {
-    case "admin":
-      return "destructive";
-    case "manager":
-      return "default";
-    case "collector":
-      return "secondary";
-    case "viewer":
-      return "outline";
-    default:
-      return "outline";
-  }
+// Constantes de roles para mayor claridad
+const ROLE_SUPERADMIN: UserRole = 1;
+const ROLE_ADMIN: UserRole = 3;
+const ROLE_RECOLECTOR: UserRole = 4;
+
+// Mapeo de roles a colores
+const ROLE_COLORS: Record<UserRole, "destructive" | "default" | "secondary" | "outline"> = {
+  [ROLE_SUPERADMIN]: "destructive",
+  [ROLE_ADMIN]: "default",
+  [ROLE_RECOLECTOR]: "secondary",
+};
+
+const getRoleColor = (role: UserRole) => {
+  return ROLE_COLORS[role] || "outline";
 };
 
 const isExpired = (expirationDate: Date) => {
@@ -58,7 +60,7 @@ export const AuthorizedUsersTable = ({
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.email}</TableCell>
                 <TableCell>
-                  <Badge variant={getRoleColor(user.role)}>{user.role}</Badge>
+                  <Badge variant={getRoleColor(user.role)}>{ROLE_NAMES[user.role]}</Badge>
                 </TableCell>
                 <TableCell>{user.accessGranted.toLocaleDateString()}</TableCell>
                 <TableCell>

@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import type { AuthorizedUser, CreateUserRequest, UserRole } from "../types";
+import { ROLE_NAMES } from "../types";
 
 type UserDialogProps = {
   open: boolean;
@@ -28,10 +29,9 @@ type UserDialogProps = {
 };
 
 const userRoles: { value: UserRole; label: string }[] = [
-  { value: "admin", label: "Administrator" },
-  { value: "manager", label: "Manager" },
-  { value: "collector", label: "Collector" },
-  { value: "viewer", label: "Viewer" },
+  { value: 1, label: ROLE_NAMES[1] }, // superadmin
+  { value: 3, label: ROLE_NAMES[3] }, // admin
+  { value: 4, label: ROLE_NAMES[4] }, // recolector
 ];
 
 const HOURS_PER_DAY = 24;
@@ -45,7 +45,7 @@ export const UserDialog = ({ open, onOpenChange, user, onSubmit }: UserDialogPro
   const form = useForm<CreateUserRequest>({
     defaultValues: {
       email: "",
-      role: "viewer",
+      role: 4, // rol recolector por defecto
       accessGranted: new Date(),
       accessExpiration: new Date(Date.now() + ONE_YEAR_IN_MS),
       hasAccess: true,
@@ -68,7 +68,7 @@ export const UserDialog = ({ open, onOpenChange, user, onSubmit }: UserDialogPro
         // Adding new user - reset to default values
         form.reset({
           email: "",
-          role: "viewer",
+          role: 4, // rol recolector por defecto
           accessGranted: new Date(),
           accessExpiration: new Date(Date.now() + ONE_YEAR_IN_MS),
           hasAccess: true,
@@ -114,7 +114,10 @@ export const UserDialog = ({ open, onOpenChange, user, onSubmit }: UserDialogPro
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Role</FormLabel>
-                  <Select defaultValue={field.value} onValueChange={field.onChange}>
+                  <Select
+                    defaultValue={field.value?.toString()}
+                    onValueChange={(value) => field.onChange(Number.parseInt(value, 10) as UserRole)}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Select a role" />
@@ -122,7 +125,7 @@ export const UserDialog = ({ open, onOpenChange, user, onSubmit }: UserDialogPro
                     </FormControl>
                     <SelectContent>
                       {userRoles.map((role) => (
-                        <SelectItem key={role.value} value={role.value}>
+                        <SelectItem key={role.value} value={role.value.toString()}>
                           {role.label}
                         </SelectItem>
                       ))}
