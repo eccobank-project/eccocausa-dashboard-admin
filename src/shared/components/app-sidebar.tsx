@@ -23,6 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { SearchForm } from "./search-form";
 import { TeamSwitcher } from "./team-switcher";
@@ -107,6 +108,13 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const location = useLocation();
+  const { isMobile, setOpenMobile } = useSidebar();
+
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setOpenMobile(false);
+    }
+  };
 
   return (
     <Sidebar {...props}>
@@ -131,7 +139,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         className="group/menu-button h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
                         isActive={isActive}
                       >
-                        <Link to={menuItem.url}>
+                        <Link onClick={handleLinkClick} to={menuItem.url}>
                           {menuItem.icon && (
                             <menuItem.icon
                               aria-hidden="true"
