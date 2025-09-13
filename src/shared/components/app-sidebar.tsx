@@ -1,15 +1,16 @@
 import {
   RiBardLine,
-  RiCodeSSlashLine,
-  RiLayoutLeftLine,
   RiLeafLine,
-  RiLoginCircleLine,
   RiLogoutBoxLine,
+  RiMapPinLine,
+  RiPieChartLine,
   RiScanLine,
   RiSettings3Line,
+  RiTeamLine,
   RiUserFollowLine,
 } from "@remixicon/react";
 import type * as React from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   Sidebar,
   SidebarContent,
@@ -44,44 +45,44 @@ const data = {
   ],
   navMain: [
     {
-      title: "Sections",
+      title: "Main",
       url: "#",
       items: [
         {
           title: "Dashboard",
-          url: "#",
+          url: "/",
           icon: RiScanLine,
         },
+        {
+          title: "Collectors",
+          url: "/collectors",
+          icon: RiTeamLine,
+        },
+        {
+          title: "Customers",
+          url: "/customers",
+          icon: RiUserFollowLine,
+        },
+        {
+          title: "Map",
+          url: "/map",
+          icon: RiMapPinLine,
+        },
+      ],
+    },
+    {
+      title: "Analytics",
+      url: "#",
+      items: [
         {
           title: "Insights",
           url: "#",
           icon: RiBardLine,
         },
         {
-          title: "Contacts",
-          url: "#",
-          icon: RiUserFollowLine,
-          isActive: true,
-        },
-        {
-          title: "Tools",
-          url: "#",
-          icon: RiCodeSSlashLine,
-        },
-        {
-          title: "Integration",
-          url: "#",
-          icon: RiLoginCircleLine,
-        },
-        {
-          title: "Layouts",
-          url: "#",
-          icon: RiLayoutLeftLine,
-        },
-        {
           title: "Reports",
           url: "#",
-          icon: RiLeafLine,
+          icon: RiPieChartLine,
         },
       ],
     },
@@ -91,7 +92,7 @@ const data = {
       items: [
         {
           title: "Settings",
-          url: "#",
+          url: "/settings",
           icon: RiSettings3Line,
         },
         {
@@ -105,6 +106,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const location = useLocation();
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -119,26 +122,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarGroupLabel className="text-muted-foreground/60 uppercase">{item.title}</SidebarGroupLabel>
             <SidebarGroupContent className="px-2">
               <SidebarMenu>
-                {item.items.map((menuItem) => (
-                  <SidebarMenuItem key={menuItem.title}>
-                    <SidebarMenuButton
-                      asChild
-                      className="group/menu-button h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
-                      isActive={menuItem.isActive}
-                    >
-                      <a href={menuItem.url}>
-                        {menuItem.icon && (
-                          <menuItem.icon
-                            aria-hidden="true"
-                            className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
-                            size={22}
-                          />
-                        )}
-                        <span>{menuItem.title}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
+                {item.items.map((menuItem) => {
+                  const isActive = location.pathname === menuItem.url;
+                  return (
+                    <SidebarMenuItem key={menuItem.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className="group/menu-button h-9 gap-3 rounded-md bg-gradient-to-r font-medium hover:bg-transparent hover:from-sidebar-accent hover:to-sidebar-accent/40 data-[active=true]:from-primary/20 data-[active=true]:to-primary/5 [&>svg]:size-auto"
+                        isActive={isActive}
+                      >
+                        <Link to={menuItem.url}>
+                          {menuItem.icon && (
+                            <menuItem.icon
+                              aria-hidden="true"
+                              className="text-muted-foreground/60 group-data-[active=true]/menu-button:text-primary"
+                              size={22}
+                            />
+                          )}
+                          <span>{menuItem.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
