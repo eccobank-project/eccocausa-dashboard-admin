@@ -40,6 +40,10 @@ export const router = createBrowserRouter([
         element: <MapView />,
       },
       {
+        path: "map/:clientId",
+        element: <MapView />,
+      },
+      {
         path: "settings",
         element: <SettingsView />,
       },
