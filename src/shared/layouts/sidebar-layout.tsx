@@ -1,4 +1,4 @@
-import { RiMapPinLine, RiScanLine, RiTeamLine, RiUserLine } from "@remixicon/react";
+import { RiMapPinLine, RiScanLine, RiSettings2Line, RiTeamLine, RiUserLine } from "@remixicon/react";
 import { Outlet, useLocation } from "react-router-dom";
 import {
   Breadcrumb,
@@ -39,6 +39,12 @@ const getBreadcrumbData = (pathname: string) => {
         icon: <RiMapPinLine aria-hidden="true" size={22} />,
         label: "Map",
         page: "Locations",
+      };
+    case "/settings":
+      return {
+        icon: <RiSettings2Line aria-hidden="true" size={22} />,
+        label: "Settings",
+        page: "User Management",
       };
     default:
       return {
