@@ -3,8 +3,12 @@ import { useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/shared/lib/supabase";
 import type { ClientList } from "../customers/types/client-list";
+import { GoogleMap } from "./components/google-map";
+import { useClientsForMap } from "./hooks/use-clients-for-map";
 
 const DECIMAL_PLACES = 4;
+const DEFAULT_LATITUDE = 6.5244; // Lagos, Nigeria
+const DEFAULT_LONGITUDE = 3.3792; // Lagos, Nigeria
 
 // Function to fetch a specific client by ID
 const fetchClientById = async (id: string): Promise<ClientList> => {
@@ -17,8 +21,30 @@ const fetchClientById = async (id: string): Promise<ClientList> => {
   return data as ClientList;
 };
 
+// Helper function to convert client data
+const convertClientToMapFormat = (client: ClientList) => ({
+  id: client.id.toString(),
+  name: client.nombre,
+  email: `cliente${client.id}@example.com`,
+  phone: `+234 ${client.codigo}`,
+  address: `Cliente ${client.codigo} - Lagos, Nigeria`,
+  latitude: client.latitud || DEFAULT_LATITUDE,
+  longitude: client.longitud || DEFAULT_LONGITUDE,
+  avatar: client.foto || "",
+  status: client.estado === "activo" ? ("active" as const) : ("inactive" as const),
+  lastContact: client.fecha_registro?.toString(),
+  totalCollections: 0,
+});
+
 const MapView = () => {
   const { clientId } = useParams<{ clientId: string }>();
+  const {
+    clients,
+    isLoading: isLoadingClients,
+    totalClients,
+    activeClients,
+    clientsWithCoordinates,
+  } = useClientsForMap();
 
   // Query for specific client if clientId is provided
   const { data: selectedClient } = useQuery({
@@ -33,6 +59,9 @@ const MapView = () => {
   });
 
   const isViewingSpecificClient = Boolean(clientId && selectedClient);
+
+  // Convert client data for the map
+  const mapClients = isViewingSpecificClient && selectedClient ? [convertClientToMapFormat(selectedClient)] : clients;
 
   return (
     <div className="space-y-6">
@@ -90,34 +119,36 @@ const MapView = () => {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
           <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="font-medium text-sm">Rutas Activas</h3>
+            <h3 className="font-medium text-sm">Total Clientes</h3>
           </div>
-          <div className="font-bold text-2xl">12</div>
-          <p className="text-muted-foreground text-xs">Rutas en progreso</p>
+          <div className="font-bold text-2xl">{isLoadingClients ? "..." : totalClients.toLocaleString()}</div>
+          <p className="text-muted-foreground text-xs">Clientes registrados</p>
         </div>
 
         <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
           <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="font-medium text-sm">Cobradores Online</h3>
+            <h3 className="font-medium text-sm">Clientes Activos</h3>
           </div>
-          <div className="font-bold text-2xl">18</div>
-          <p className="text-muted-foreground text-xs">Actualmente rastreando</p>
+          <div className="font-bold text-2xl">{isLoadingClients ? "..." : activeClients.toLocaleString()}</div>
+          <p className="text-muted-foreground text-xs">Con estado activo</p>
         </div>
 
         <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
           <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="font-medium text-sm">Áreas Cubiertas</h3>
+            <h3 className="font-medium text-sm">Con Ubicación</h3>
           </div>
-          <div className="font-bold text-2xl">8</div>
-          <p className="text-muted-foreground text-xs">Zonas de servicio activas</p>
+          <div className="font-bold text-2xl">{isLoadingClients ? "..." : clientsWithCoordinates.toLocaleString()}</div>
+          <p className="text-muted-foreground text-xs">Coordenadas válidas</p>
         </div>
 
         <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
           <div className="flex items-center justify-between space-y-0 pb-2">
-            <h3 className="font-medium text-sm">Completadas Hoy</h3>
+            <h3 className="font-medium text-sm">En el Mapa</h3>
           </div>
-          <div className="font-bold text-2xl">67</div>
-          <p className="text-muted-foreground text-xs">Cobranzas terminadas</p>
+          <div className="font-bold text-2xl">{isLoadingClients ? "..." : mapClients.length.toLocaleString()}</div>
+          <p className="text-muted-foreground text-xs">
+            {isViewingSpecificClient ? "Cliente individual" : "Todos los clientes"}
+          </p>
         </div>
       </div>
 
@@ -126,25 +157,17 @@ const MapView = () => {
         <h3 className="mb-4 font-semibold text-lg">
           {isViewingSpecificClient ? `Ubicación de ${selectedClient?.nombre}` : "Mapa Interactivo"}
         </h3>
-        <div className="flex h-96 items-center justify-center rounded-lg bg-muted">
-          <div className="text-center">
-            <div className="mb-2 text-4xl">🗺️</div>
-            <p className="font-medium text-lg">Componente de Mapa</p>
-            {isViewingSpecificClient && selectedClient ? (
-              <div className="mt-2 space-y-1">
-                <p className="text-muted-foreground text-sm">
-                  Mostrando ubicación del cliente: {selectedClient.nombre}
-                </p>
-                <p className="text-muted-foreground text-xs">
-                  Coordenadas: {selectedClient.latitud?.toFixed(DECIMAL_PLACES)},{" "}
-                  {selectedClient.longitud?.toFixed(DECIMAL_PLACES)}
-                </p>
-                <div className="mt-2 text-2xl">📍</div>
+        <div className="h-96 overflow-hidden rounded-lg">
+          {isLoadingClients ? (
+            <div className="flex h-full items-center justify-center bg-muted/50">
+              <div className="text-center">
+                <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                <p className="text-muted-foreground text-sm">Cargando clientes...</p>
               </div>
-            ) : (
-              <p className="text-muted-foreground text-sm">El mapa interactivo se implementará aquí</p>
-            )}
-          </div>
+            </div>
+          ) : (
+            <GoogleMap className="h-full w-full" clients={mapClients} selectedClientId={clientId} />
+          )}
         </div>
       </div>
 
@@ -190,4 +213,4 @@ const MapView = () => {
   );
 };
 
-export default MapView;
+export { MapView };

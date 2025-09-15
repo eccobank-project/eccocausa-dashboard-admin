@@ -11,7 +11,10 @@ import SidebarLayout from "@/shared/layouts/sidebar-layout";
 
 const CollectorsView = lazy(() => import("../../features/collectors/collectors-view"));
 const CustomersView = lazy(() => import("../../features/customers/customers-view"));
-const MapView = lazy(() => import("../../features/map/map-view"));
+const MapView = lazy(() => import("../../features/map/map-view").then((module) => ({ default: module.MapView })));
+const SectorsView = lazy(() =>
+  import("../../features/sectors/sectors-view").then((module) => ({ default: module.SectorsView }))
+);
 const SettingsView = lazy(() => import("../../features/settings/settings-view"));
 
 export const router = createBrowserRouter([
@@ -42,6 +45,10 @@ export const router = createBrowserRouter([
       {
         path: "map/:clientId",
         element: <MapView />,
+      },
+      {
+        path: "sectors",
+        element: <SectorsView />,
       },
       {
         path: "settings",
