@@ -11,6 +11,8 @@
     "lint": "bunx @biomejs/biome lint . --fix"
   },
   "dependencies": {
+    "@googlemaps/js-api-loader": "^1.16.10",
+    "@googlemaps/react-wrapper": "^1.2.0",
     "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -69,6 +71,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.2",
     "@eslint/js": "^9.33.0",
+    "@types/google.maps": "^3.58.1",
     "@types/node": "^24.3.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
