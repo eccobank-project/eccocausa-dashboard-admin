@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
 import { supabase } from "@/shared/lib/supabase";
+import ClientInfoModal from "./client-info-modal";
 import { MapComponent } from "./map-component";
 
 const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
@@ -56,6 +57,11 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
     unassigned: [],
   });
 
+  // Estado para el modal de información del cliente
+  const [selectedClient, setSelectedClient] = useState<ClientData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClientIsAssigned, setSelectedClientIsAssigned] = useState(false);
+
   // Crear marcador para cliente
   const createClientMarker = useCallback((client: ClientData, map: google.maps.Map, isAssigned: boolean) => {
     const COORD_DECIMAL_PLACES = 6;
@@ -84,7 +90,7 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
     }
 
     try {
-      // Crear marcador tradicional directamente (sin intentar marcadores avanzados)
+      // Crear marcador tradicional con colores corregidos
       const marker = new window.google.maps.Marker({
         position: { lat, lng },
         map,
@@ -92,7 +98,7 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
         icon: {
           path: window.google.maps.SymbolPath.CIRCLE,
           scale: 8,
-          fillColor: isAssigned ? "#22c55e" : "#f59e0b",
+          fillColor: isAssigned ? "#3b82f6" : "#f97316", // Azul para asignados, naranja para no asignados
           fillOpacity: 1,
           strokeColor: "#ffffff",
           strokeWeight: 2,
@@ -107,48 +113,15 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
         title: marker.getTitle(),
       });
 
-      // InfoWindow para mostrar información del cliente
-      const infoContent = `
-          <div style="padding: 8px; font-family: system-ui; max-width: 200px;">
-            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-              <div style="width: 12px; height: 12px; border-radius: 50%; background-color: ${
-                isAssigned ? "#22c55e" : "#f59e0b"
-              }; border: 2px solid #fff;"></div>
-              <strong style="color: #333; font-size: 14px;">${client.nombre}</strong>
-            </div>
-            <p style="margin: 2px 0; color: #666; font-size: 11px;">ID: ${client.id}</p>
-            <p style="margin: 2px 0; color: ${isAssigned ? "#16a34a" : "#d97706"}; font-size: 11px; font-weight: 500;">
-              ${isAssigned ? "Cliente Asignado" : "Cliente No Asignado"}
-            </p>
-            ${
-              client.sector_nombre
-                ? `<p style="margin: 2px 0; color: #666; font-size: 11px;">Sector: ${client.sector_nombre}</p>`
-                : ""
-            }
-            <p style="margin: 2px 0; color: #666; font-size: 11px;">Coordenadas: ${lat.toFixed(
-              COORD_DECIMAL_PLACES
-            )}, ${lng.toFixed(COORD_DECIMAL_PLACES)}</p>
-          </div>
-        `;
+      // Añadir evento click para abrir modal
+      marker.addListener("click", () => {
+        console.log("🖱️ Click en marcador:", client.nombre);
+        setSelectedClient(client);
+        setSelectedClientIsAssigned(isAssigned);
+        setIsModalOpen(true);
+      });
 
-      try {
-        const infoWindow = new window.google.maps.InfoWindow({
-          content: infoContent,
-        });
-
-        // Añadir evento click al marcador tradicional
-        marker.addListener("click", () => {
-          infoWindow.open({
-            anchor: marker,
-            map,
-          });
-        });
-
-        return marker;
-      } catch (error) {
-        console.error("Error al crear InfoWindow:", error);
-        return marker;
-      }
+      return marker;
     } catch (error) {
       console.error(`Error al crear marcador para cliente ${client.nombre}:`, error);
       return null;
@@ -164,50 +137,7 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
     console.log("Marcadores limpiados correctamente");
   }, []);
 
-  // Test function to create a visible marker at map center (for debugging)
-  const createTestMarker = useCallback(() => {
-    if (!mapInstanceRef.current) {
-      console.log("No map instance available for test marker");
-      return;
-    }
-
-    const center = mapInstanceRef.current.getCenter();
-    if (!center) {
-      console.log("Could not get map center for test marker");
-      return;
-    }
-
-    const testMarker = new window.google.maps.Marker({
-      position: center,
-      map: mapInstanceRef.current,
-      title: "Test Marker",
-      icon: {
-        url: "http://maps.google.com/mapfiles/ms/icons/red-dot.png",
-        scaledSize: new window.google.maps.Size(40, 40),
-      },
-      visible: true,
-      clickable: true,
-    });
-
-    console.log("Test marker created at:", center.toJSON());
-
-    // Add to markers array so it gets cleaned up
-    clientMarkersRef.current.push(testMarker);
-  }, []);
-
-  // Function to manually refresh and redraw all markers
-  const refreshMarkers = useCallback(() => {
-    console.log("Refreshing all markers...");
-    clientMarkersRef.current.forEach((marker, index) => {
-      marker.setVisible(false);
-      setTimeout(() => {
-        marker.setVisible(true);
-        console.log(`Marker ${index + 1} refreshed`);
-      }, 50 * index);
-    });
-  }, []);
-
-  // Renderizar marcadores de clientes
+  // Renderizar marcadores de clientes  // Renderizar marcadores de clientes
   const renderClientMarkers = useCallback(
     (clients: ClientData[], isAssigned: boolean) => {
       if (!mapInstanceRef.current) {
@@ -578,17 +508,25 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
     }, MAP_INIT_DELAY_MS);
 
     return (
-      <MapComponent
-        activeFilter={activeFilter}
-        clientsData={clientsData}
-        loading={loading}
-        mapRef={mapRef}
-        onClearFilters={clearFilters}
-        onCreateTestMarker={createTestMarker}
-        onLoadAssignedClients={loadAssignedClients}
-        onLoadUnassignedClients={loadUnassignedClients}
-        onRefreshMarkers={refreshMarkers}
-      />
+      <>
+        <MapComponent
+          activeFilter={activeFilter}
+          clientsData={clientsData}
+          loading={loading}
+          mapRef={mapRef}
+          onClearFilters={clearFilters}
+          onLoadAssignedClients={loadAssignedClients}
+          onLoadUnassignedClients={loadUnassignedClients}
+        />
+
+        {/* Modal de información del cliente */}
+        <ClientInfoModal
+          client={selectedClient}
+          isAssigned={selectedClientIsAssigned}
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+        />
+      </>
     );
   };
 

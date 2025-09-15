@@ -20,8 +20,6 @@ type MapComponentProps = {
   onLoadAssignedClients: () => void;
   onLoadUnassignedClients: () => void;
   onClearFilters: () => void;
-  onCreateTestMarker?: () => void;
-  onRefreshMarkers?: () => void;
 };
 
 // Componente para el mapa y controles UI
@@ -33,8 +31,6 @@ const MapComponent = ({
   onLoadAssignedClients,
   onLoadUnassignedClients,
   onClearFilters,
-  onCreateTestMarker,
-  onRefreshMarkers,
 }: MapComponentProps) => {
   return (
     <div className="space-y-4">
@@ -78,19 +74,6 @@ const MapComponent = ({
           <Button disabled={loading || activeFilter === "none"} onClick={onClearFilters} variant="ghost">
             Limpiar Filtro
           </Button>
-
-          {/* Debug buttons */}
-          {onCreateTestMarker && (
-            <Button onClick={onCreateTestMarker} size="sm" variant="outline">
-              Test Marker
-            </Button>
-          )}
-
-          {onRefreshMarkers && (
-            <Button onClick={onRefreshMarkers} size="sm" variant="outline">
-              Refresh Markers
-            </Button>
-          )}
         </div>
 
         {/* Información del filtro activo */}
