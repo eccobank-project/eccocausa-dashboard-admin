@@ -64,7 +64,7 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
 
   // Crear marcador para cliente
   const createClientMarker = useCallback((client: ClientData, map: google.maps.Map, isAssigned: boolean) => {
-    const COORD_DECIMAL_PLACES = 6;
+    // const COORD_DECIMAL_PLACES = 6;
 
     // Usar lat/lng derivados para compatibilidad o latitud/longitud originales
     const lat = Number(client.lat || client.latitud || 0);
