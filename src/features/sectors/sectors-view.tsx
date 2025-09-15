@@ -46,24 +46,14 @@ const getFormCardDescription = (showCreateForm: boolean, editingSector: Sector |
 const SectorsView = () => {
   const { data: sectors, isLoading, error } = useSectorList();
 
-  const [selectedSector, setSelectedSector] = useState<Sector | null>(null);
   const [editingSector, setEditingSector] = useState<Sector | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [activeTab, setActiveTab] = useState("table");
 
-  const handleSectorSearch = (sectorName: string, placeData: google.maps.places.PlaceResult) => {
-    // Auto-completar formulario con datos del lugar encontrado
-    setShowCreateForm(true);
-    setActiveTab("form");
-
-    // Aquí podrías setear valores por defecto en el formulario
-    // basados en la búsqueda de Google Maps
-    console.log("Sector encontrado:", sectorName, placeData);
-  };
-
   const handleSectorSelect = (sector: Sector) => {
-    setSelectedSector(sector);
+    // Solo cambiar a la pestaña de mapa para visualizar
     setActiveTab("map");
+    console.log("Sector seleccionado:", sector.nombre);
   };
 
   const handleEditSector = (sector: Sector) => {
@@ -122,7 +112,7 @@ const SectorsView = () => {
             <CardTitle className="font-medium text-sm">Total Sectores</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-bold text-2xl">{sectors.length}</div>
+            <div className="font-bold text-2xl">{sectors?.length ?? 0}</div>
           </CardContent>
         </Card>
         <Card>
@@ -130,7 +120,7 @@ const SectorsView = () => {
             <CardTitle className="font-medium text-sm">Sectores Activos</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="font-bold text-2xl">{sectors.length}</div>
+            <div className="font-bold text-2xl">{sectors?.length ?? 0}</div>
           </CardContent>
         </Card>
         <Card>
@@ -139,7 +129,7 @@ const SectorsView = () => {
           </CardHeader>
           <CardContent>
             <div className="text-muted-foreground text-sm">
-              {sectors[0]?.created_at ? new Date(sectors[0].created_at).toLocaleDateString("es-ES") : "Sin datos"}
+              {sectors?.[0]?.created_at ? new Date(sectors[0].created_at).toLocaleDateString("es-ES") : "Sin datos"}
             </div>
           </CardContent>
         </Card>
@@ -149,7 +139,7 @@ const SectorsView = () => {
           </CardHeader>
           <CardContent>
             <div className="flex gap-1">
-              {Array.from(new Set(sectors.map((s: Sector) => s.color)))
+              {Array.from(new Set((sectors ?? []).map((s: Sector) => s.color)))
                 .slice(0, COLORS_PREVIEW_LIMIT)
                 .map((color) => (
                   <div
@@ -193,11 +183,14 @@ const SectorsView = () => {
             <CardHeader>
               <CardTitle>Mapa de Sectores</CardTitle>
               <CardDescription>
-                Visualiza y busca sectores en el mapa. Puedes buscar nuevos sectores para agregar
+                Visualiza clientes asignados y no asignados en el mapa. Utiliza los filtros para mostrar diferentes
+                tipos de clientes.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <SectorsMap onSectorSearch={handleSectorSearch} sectors={sectors} selectedSector={selectedSector} />
+              <div style={{ display: activeTab === "map" ? "block" : "none" }}>
+                <SectorsMap />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -209,22 +202,12 @@ const SectorsView = () => {
               <CardDescription>{getFormCardDescription(showCreateForm, editingSector)}</CardDescription>
             </CardHeader>
             <CardContent>
-              {showCreateForm || editingSector ? (
-                <SectorForm
-                  mode={editingSector ? "edit" : "create"}
-                  onCancel={handleFormCancel}
-                  onSuccess={handleFormSuccess}
-                  sector={editingSector || undefined}
-                />
-              ) : (
-                <div className="flex h-32 items-center justify-center rounded-lg border border-dashed">
-                  <div className="text-center">
-                    <p className="text-muted-foreground text-sm">
-                      Haz clic en "Nuevo Sector" o busca un sector en el mapa para comenzar
-                    </p>
-                  </div>
-                </div>
-              )}
+              <SectorForm
+                mode={editingSector ? "edit" : "create"}
+                onCancel={handleFormCancel}
+                onSuccess={handleFormSuccess}
+                sector={editingSector || undefined}
+              />
             </CardContent>
           </Card>
         </TabsContent>
