@@ -30,7 +30,7 @@ import {
   useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
-import { useId, useMemo, useRef, useState, useTransition } from "react";
+import { useCallback, useId, useMemo, useRef, useState, useTransition } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
@@ -274,47 +274,42 @@ export default function CustomersTable({ data, isLoading, onEdit, onDelete, onBu
     },
   });
 
-  // Extract complex expressions into separate variables
-  const statusColumn = table.getColumn("estado");
-  const statusFacetedValues = statusColumn?.getFacetedUniqueValues();
-  const statusFilterValue = statusColumn?.getFilterValue();
-
-  // Update useMemo hooks with simplified dependencies
+  // Optimized useMemo hooks with better dependencies
   const uniqueStatusValues = useMemo(() => {
-    if (!statusColumn) {
+    const facetedValues = table.getColumn("estado")?.getFacetedUniqueValues();
+    if (!facetedValues) {
       return [];
     }
 
-    const values = Array.from(statusFacetedValues?.keys() ?? []);
-    return values.sort();
-  }, [statusColumn, statusFacetedValues]);
+    return Array.from(facetedValues.keys()).sort();
+  }, [table]);
 
   const statusCounts = useMemo(() => {
-    if (!statusColumn) {
-      return new Map();
-    }
-    return statusFacetedValues ?? new Map();
-  }, [statusColumn, statusFacetedValues]);
+    return table.getColumn("estado")?.getFacetedUniqueValues() ?? new Map();
+  }, [table]);
 
   const selectedStatuses = useMemo(() => {
-    return (statusFilterValue as string[]) ?? [];
-  }, [statusFilterValue]);
+    return (table.getColumn("estado")?.getFilterValue() as string[]) ?? [];
+  }, [table]);
 
-  const handleStatusChange = (checked: boolean, value: string) => {
-    const filterValue = table.getColumn("estado")?.getFilterValue() as string[];
-    const newFilterValue = filterValue ? [...filterValue] : [];
+  const handleStatusChange = useCallback(
+    (checked: boolean, value: string) => {
+      const filterValue = table.getColumn("estado")?.getFilterValue() as string[];
+      const newFilterValue = filterValue ? [...filterValue] : [];
 
-    if (checked) {
-      newFilterValue.push(value);
-    } else {
-      const index = newFilterValue.indexOf(value);
-      if (index > -1) {
-        newFilterValue.splice(index, 1);
+      if (checked) {
+        newFilterValue.push(value);
+      } else {
+        const index = newFilterValue.indexOf(value);
+        if (index > -1) {
+          newFilterValue.splice(index, 1);
+        }
       }
-    }
 
-    table.getColumn("estado")?.setFilterValue(newFilterValue.length ? newFilterValue : undefined);
-  };
+      table.getColumn("estado")?.setFilterValue(newFilterValue.length ? newFilterValue : undefined);
+    },
+    [table]
+  );
 
   return (
     <div className="space-y-4">

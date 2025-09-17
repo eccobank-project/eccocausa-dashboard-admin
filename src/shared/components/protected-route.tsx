@@ -1,11 +1,11 @@
-import { Navigate, useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
 import type { Session } from "@supabase/supabase-js";
+import { useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 
-interface ProtectedRouteProps {
+type ProtectedRouteProps = {
   children: React.ReactNode;
-}
+};
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [session, setSession] = useState<Session | null>(null);
@@ -42,7 +42,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (!session) {
     // Save the attempted location to redirect back after login
-    return <Navigate to="/auth/login" state={{ from: location }} replace />;
+    return <Navigate replace state={{ from: location }} to="/auth/login" />;
   }
 
   return <>{children}</>;

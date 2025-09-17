@@ -1,68 +1,78 @@
-import { lazy } from "react";
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router";
 import AuthLayout from "@/features/authentication/layouts/auth-layout";
 import AuthErrorView from "@/features/authentication/views/auth-error-view";
 import LoginView from "@/features/authentication/views/login-view";
 import RegisterView from "@/features/authentication/views/register-view";
-import { DashboardView } from "@/features/dashboard/dashboard-view";
-import { ProtectedRoute } from "@/shared/components/protected-route";
-import { PublicRoute } from "@/shared/components/public-route";
+import { RouteErrorBoundary } from "@/shared/components/route-error-boundary";
 import SidebarLayout from "@/shared/layouts/sidebar-layout";
-
-const CollectorsView = lazy(() => import("../../features/collectors/collectors-view"));
-const CustomersView = lazy(() => import("../../features/customers/customers-view"));
-const MapView = lazy(() => import("../../features/map/map-view").then((module) => ({ default: module.MapView })));
-const SectorsView = lazy(() =>
-  import("../../features/sectors/sectors-view").then((module) => ({ default: module.SectorsView }))
-);
-const SettingsView = lazy(() => import("../../features/settings/settings-view"));
+import { customersLoader } from "@/shared/router/loaders/customers-loader";
+import { dashboardLoader } from "@/shared/router/loaders/dashboard-loader";
+import {
+  collectorsLoader,
+  mapLoader,
+  sectorsLoader,
+  settingsLoader,
+} from "@/shared/router/loaders/protected-routes-loader";
+import { authProtectedMiddleware } from "@/shared/router/middlewares/auth-protected";
+import { authPublicMiddleware } from "@/shared/router/middlewares/auth-public";
+import {
+  CollectorsRoute,
+  CustomersRoute,
+  DashboardRoute,
+  MapRoute,
+  SectorsRoute,
+  SettingsRoute,
+} from "./components/route-components";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <ProtectedRoute>
-        <SidebarLayout />
-      </ProtectedRoute>
-    ),
+    loader: dashboardLoader,
+    middleware: [authProtectedMiddleware],
+    element: <SidebarLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,
-        element: <DashboardView />,
+        element: <DashboardRoute />,
       },
       {
         path: "collectors",
-        element: <CollectorsView />,
+        loader: collectorsLoader,
+        element: <CollectorsRoute />,
       },
       {
         path: "customers",
-        element: <CustomersView />,
+        loader: customersLoader,
+        element: <CustomersRoute />,
       },
       {
         path: "map",
-        element: <MapView />,
+        loader: mapLoader,
+        element: <MapRoute />,
       },
       {
         path: "map/:clientId",
-        element: <MapView />,
+        loader: mapLoader,
+        element: <MapRoute />,
       },
       {
         path: "sectors",
-        element: <SectorsView />,
+        loader: sectorsLoader,
+        element: <SectorsRoute />,
       },
       {
         path: "settings",
-        element: <SettingsView />,
+        loader: settingsLoader,
+        element: <SettingsRoute />,
       },
     ],
   },
   {
     path: "/auth",
-    element: (
-      <PublicRoute>
-        <AuthLayout />
-      </PublicRoute>
-    ),
+    middleware: [authPublicMiddleware],
+    element: <AuthLayout />,
+    errorElement: <RouteErrorBoundary />,
     children: [
       {
         index: true,

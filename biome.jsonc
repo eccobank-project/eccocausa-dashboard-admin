@@ -11,7 +11,11 @@
   "linter": {
     "rules": {
       "suspicious": {
-        "noConsole": "off"
+        "noConsole": "off",
+        "noArrayIndexKey": "off"
+      },
+      "performance": {
+        "noBarrelFile": "off"
       }
     }
   }
