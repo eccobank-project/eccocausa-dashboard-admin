@@ -36,17 +36,6 @@ export const SectorsTable = ({ data, isLoading, onEdit, onMapView }: SectorsTabl
     }
   };
 
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) {
-      return "N/A";
-    }
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   if (isLoading) {
     return (
       <Card>
@@ -103,7 +92,6 @@ export const SectorsTable = ({ data, isLoading, onEdit, onMapView }: SectorsTabl
                 <TableHead>Nombre</TableHead>
                 <TableHead>Ciudad ID</TableHead>
                 <TableHead>Día Recojo</TableHead>
-                <TableHead>Fecha Creación</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -132,9 +120,6 @@ export const SectorsTable = ({ data, isLoading, onEdit, onMapView }: SectorsTabl
                     <Badge className="capitalize" variant="outline">
                       {sector.dia_recojo}
                     </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm">{formatDate(sector.created_at)}</div>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>

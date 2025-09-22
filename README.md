@@ -1,4 +1,4 @@
-# 🏦 EccoBank Dashboard Admin
+# � Eccocausa Dashboard Admin
 
 **Dashboard administrativo moderno construido con React + TypeScript + Vite**
 
@@ -87,8 +87,8 @@ src/
 
 # Clonar repositorio
 
-git clone https://github.com/eccobank-project/eccobank-dashboard-admin.git
-cd eccobank-dashboard-admin
+git clone https://github.com/eccobank-project/eccocausa-dashboard-admin.git
+cd eccocausa-dashboard-admin
 
 # Instalar dependencias
 
@@ -202,4 +202,4 @@ Este proyecto está bajo la Licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 ---
 
-**Desarrollado con ❤️ por el equipo de EccoBank**
+**Desarrollado con ❤️ por el equipo de Eccocausa**

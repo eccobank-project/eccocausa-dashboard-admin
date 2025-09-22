@@ -1,9 +1,9 @@
-import { Status, Wrapper } from "@googlemaps/react-wrapper";
-import { AlertCircle, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
+import { GoogleMapsProvider, Status } from "@/shared/components/google-maps-provider";
 import { supabase } from "@/shared/lib/supabase";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ClientInfoModal from "./client-info-modal";
 import { MapComponent } from "./map-component";
 
@@ -543,7 +543,7 @@ const SectorsMap = ({ className }: SectorsMapProps) => {
 
   return (
     <div className={className}>
-      <Wrapper apiKey={GOOGLE_MAPS_API_KEY} libraries={["places"]} render={renderMap} />
+      <GoogleMapsProvider>{renderMap}</GoogleMapsProvider>
     </div>
   );
 };

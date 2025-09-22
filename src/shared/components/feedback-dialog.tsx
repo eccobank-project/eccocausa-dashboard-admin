@@ -13,37 +13,29 @@ export default function FeedbackDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="text-sm">
-          Feedback
+        <Button className="text-sm" size="sm" variant="outline">
+          Soporte
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Send us feedback</DialogTitle>
+          <DialogTitle>Envíanos tu feedback</DialogTitle>
           <DialogDescription>
-            Watch{" "}
-            <a className="text-foreground hover:underline" href="#">
-              tutorials
-            </a>
-            , read Origin UI&lsquo;s{" "}
-            <a className="text-foreground hover:underline" href="#">
-              documentation
-            </a>
-            , or join our{" "}
-            <a className="text-foreground hover:underline" href="#">
+            Comunícate con nosotros a través de nuestro{" "}
+            <a className="text-foreground hover:underline" href="https://discord.gg/eccocausa">
               Discord
             </a>{" "}
-            for community help.
+            o por{" "}
+            <a className="text-foreground hover:underline" href="https://t.me/eccocausa">
+              Telegram
+            </a>{" "}
+            y envía tu mensaje para recibir ayuda de nuestro soporte.
           </DialogDescription>
         </DialogHeader>
         <form className="space-y-5">
-          <Textarea
-            id="feedback"
-            placeholder="How can we improve Origin UI?"
-            aria-label="Send feedback"
-          />
+          <Textarea aria-label="Enviar feedback" id="feedback" placeholder="¿Cómo podemos mejorar Eccocausa?" />
           <div className="flex flex-col sm:flex-row sm:justify-end">
-            <Button type="button">Send feedback</Button>
+            <Button type="button">Enviar feedback</Button>
           </div>
         </form>
       </DialogContent>

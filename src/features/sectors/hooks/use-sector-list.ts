@@ -1,5 +1,6 @@
 /** biome-ignore-all lint/style/noMagicNumbers: Cache configuration constants */
 
+import { supabase } from "@/shared/lib/supabase";
 import { useQuery } from "@tanstack/react-query";
 import {
   fetchSectorById,
@@ -57,6 +58,40 @@ export const useSector = (id: number | undefined) => {
     error,
     isLoading,
     isFetching,
+  };
+};
+
+export const useSectorListWithGeometry = () => {
+  const { data, error, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ["sectorListWithGeometry"],
+    queryFn: async () => {
+      const { data: sectorsData, error: sectorsError } = await supabase
+        .from("sector")
+        .select("id, nombre, id_ciudad, color, dia_recojo, geom")
+        .order("nombre", { ascending: true });
+
+      if (sectorsError) {
+        throw new Error(
+          `Error fetching sectors with geometry: ${sectorsError.message}`
+        );
+      }
+
+      return sectorsData || [];
+    },
+    staleTime: STALE_TIME,
+    gcTime: CACHE_TIME,
+    retry: RETRY_COUNT,
+    retryDelay: (attemptIndex) =>
+      Math.min(BASE_DELAY * EXPONENTIAL_BASE ** attemptIndex, MAX_DELAY),
+  });
+
+  return {
+    data: data || [],
+    error,
+    isLoading,
+    isFetching,
+    refetch,
+    totalSectors: data?.length || 0,
   };
 };
 

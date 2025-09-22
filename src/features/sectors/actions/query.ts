@@ -6,7 +6,7 @@ const SECTOR_TABLE = "sector";
 export const fetchSectors = async (): Promise<Sector[]> => {
   const { data, error } = await supabase
     .from(SECTOR_TABLE)
-    .select("id, nombre, id_ciudad, color, dia_recojo, created_at, updated_at")
+    .select("id, nombre, id_ciudad, color, dia_recojo")
     .order("nombre", { ascending: true });
 
   if (error) {
@@ -20,7 +20,7 @@ export const fetchSectors = async (): Promise<Sector[]> => {
 export const fetchSectorById = async (id: number): Promise<Sector> => {
   const { data, error } = await supabase
     .from(SECTOR_TABLE)
-    .select("*")
+    .select("id, nombre, id_ciudad, color, dia_recojo, geom")
     .eq("id", id)
     .single();
 
@@ -31,20 +31,30 @@ export const fetchSectorById = async (id: number): Promise<Sector> => {
   return data as Sector;
 };
 
+export const fetchSectorsWithGeometry = async (): Promise<Sector[]> => {
+  // Usar RPC para obtener todas las geometrías como GeoJSON
+  const { data, error } = await supabase.rpc("get_all_sectors_with_geom");
+
+  if (error) {
+    throw new Error(`Error fetching sectors with geometry: ${error.message}`);
+  }
+
+  return (data as Sector[]) || [];
+};
+
 export const fetchSectorWithGeometry = async (id: number): Promise<Sector> => {
-  const { data, error } = await supabase
-    .from(SECTOR_TABLE)
-    .select("*")
-    .eq("id", id)
-    .single();
+  // Usar RPC para obtener la geometría como GeoJSON
+  const { data, error } = await supabase.rpc("get_sector_with_geom", {
+    p_sector_id: id,
+  });
 
   if (error) {
     throw new Error(`Error fetching sector with geometry: ${error.message}`);
   }
 
-  if (!data) {
+  if (!data || data.length === 0) {
     throw new Error("Sector not found");
   }
 
-  return data as Sector;
+  return data[0] as Sector;
 };

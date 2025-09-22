@@ -1,8 +1,8 @@
-import { Status, Wrapper } from "@googlemaps/react-wrapper";
-import { AlertCircle, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Card } from "@/components/ui/card";
+import { GoogleMapsProvider, Status } from "@/shared/components/google-maps-provider";
+import { AlertCircle, Loader2 } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { ClientLocation, MapConfig } from "../types";
 import { DEFAULT_MAP_CONFIG } from "../types";
 import { ClientModal } from "./client-modal";
@@ -187,10 +187,8 @@ export const GoogleMap = ({ clients, selectedClientId, config, className }: Goog
   }
 
   return (
-    <Wrapper
-      apiKey={GOOGLE_MAPS_API_KEY}
-      libraries={["places"]}
-      render={(status) => (
+    <GoogleMapsProvider>
+      {(status: Status) => (
         <RenderMap
           className={className}
           clients={clients}
@@ -199,7 +197,7 @@ export const GoogleMap = ({ clients, selectedClientId, config, className }: Goog
           status={status}
         />
       )}
-    />
+    </GoogleMapsProvider>
   );
 };
 
