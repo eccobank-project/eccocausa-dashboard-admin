@@ -1,9 +1,9 @@
-import { AlertCircle, Plus } from "lucide-react";
-import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AlertCircle, Plus } from "lucide-react";
+import { useState } from "react";
 import { SectorForm } from "./components/sector-form";
 import { SectorsMap } from "./components/sectors-map";
 import { SectorsTable } from "./components/sectors-table";
@@ -128,9 +128,7 @@ const SectorsView = () => {
             <CardTitle className="font-medium text-sm">Último Creado</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-muted-foreground text-sm">
-              {sectors?.[0]?.created_at ? new Date(sectors[0].created_at).toLocaleDateString("es-ES") : "Sin datos"}
-            </div>
+            <div className="text-muted-foreground text-sm">Sin datos disponibles</div>
           </CardContent>
         </Card>
         <Card>

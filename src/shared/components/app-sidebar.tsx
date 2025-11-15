@@ -1,18 +1,4 @@
 import {
-  RiBardLine,
-  RiLeafLine,
-  RiLogoutBoxLine,
-  RiMapPin2Line,
-  RiMapPinLine,
-  RiPieChartLine,
-  RiScanLine,
-  RiSettings3Line,
-  RiTeamLine,
-  RiUserFollowLine,
-} from "@remixicon/react";
-import type * as React from "react";
-import { Link, useLocation } from "react-router-dom";
-import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -26,6 +12,20 @@ import {
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
+import {
+  RiBardLine,
+  RiLeafLine,
+  RiLogoutBoxLine,
+  RiMapPin2Line,
+  RiMapPinLine,
+  RiPieChartLine,
+  RiScanLine,
+  RiSettings3Line,
+  RiTeamLine,
+  RiUserFollowLine,
+} from "@remixicon/react";
+import type * as React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { SearchForm } from "./search-form";
 import { TeamSwitcher } from "./team-switcher";
 
@@ -33,15 +33,15 @@ import { TeamSwitcher } from "./team-switcher";
 const data = {
   teams: [
     {
-      name: "InnovaCraft",
+      name: "Eccocausa",
       logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
     },
     {
-      name: "Acme Corp.",
+      name: "Eco Recolectores",
       logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
     },
     {
-      name: "Evil Corp.",
+      name: "Empresas Verdes",
       logo: "https://raw.githubusercontent.com/origin-space/origin-images/refs/heads/main/exp1/logo-01_kp2j8x.png",
     },
   ],

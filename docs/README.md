@@ -1,6 +1,6 @@
 # 📚 Índice de Documentación
 
-Documentación técnica completa del **EccoBank Dashboard Admin**
+Documentación técnica completa del **Eccocausa Dashboard Admin**
 
 ## 🏗️ **Arquitectura y Optimizaciones**
 
@@ -170,4 +170,4 @@ Enlaces a recursos adicionales.
 
 ---
 
-**📚 Documentación mantenida por el equipo de EccoBank**
+**📚 Documentación mantenida por el equipo de Eccocausa**

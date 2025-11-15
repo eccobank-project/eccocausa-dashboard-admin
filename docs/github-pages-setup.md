@@ -63,7 +63,7 @@ npm install vitepress
 ```javascript
 // docs-site/.vitepress/config.js
 export default {
-  title: "EccoBank Dashboard",
+  title: "Eccocausa Dashboard",
   description: "Documentación del dashboard administrativo",
 
   themeConfig: {

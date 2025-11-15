@@ -1,5 +1,3 @@
-import { Edit, MapPin, MoreHorizontal, Trash2 } from "lucide-react";
-import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +9,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Edit, MapPin, MoreHorizontal, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { useDeleteSector } from "../hooks/use-sector-mutations";
 import type { Sector } from "../types";
 
@@ -34,17 +34,6 @@ export const SectorsTable = ({ data, isLoading, onEdit, onMapView }: SectorsTabl
     } finally {
       setDeletingId(null);
     }
-  };
-
-  const formatDate = (dateString: string | undefined) => {
-    if (!dateString) {
-      return "N/A";
-    }
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
   };
 
   if (isLoading) {
@@ -101,7 +90,8 @@ export const SectorsTable = ({ data, isLoading, onEdit, onMapView }: SectorsTabl
               <TableRow>
                 <TableHead>Color</TableHead>
                 <TableHead>Nombre</TableHead>
-                <TableHead>Fecha Creación</TableHead>
+                <TableHead>Ciudad ID</TableHead>
+                <TableHead>Día Recojo</TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -124,7 +114,12 @@ export const SectorsTable = ({ data, isLoading, onEdit, onMapView }: SectorsTabl
                     <div className="text-muted-foreground text-sm">ID: {sector.id}</div>
                   </TableCell>
                   <TableCell>
-                    <div className="text-sm">{formatDate(sector.created_at)}</div>
+                    <div className="text-sm">{sector.id_ciudad}</div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge className="capitalize" variant="outline">
+                      {sector.dia_recojo}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
