@@ -1,6 +1,12 @@
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AlertCircle, Plus } from "lucide-react";
 import { useState } from "react";
@@ -13,17 +19,23 @@ import type { Sector } from "./types";
 const COLORS_PREVIEW_LIMIT = 5;
 
 // Helper functions para evitar ternarios anidados
-const getFormTabTitle = (showCreateForm: boolean, editingSector: Sector | null): string => {
+const getFormTabTitle = (
+  showCreateForm: boolean,
+  editingSector: Sector | null,
+): string => {
   if (showCreateForm) {
     return "Crear Sector";
   }
   if (editingSector) {
     return "Editar Sector";
   }
-  return "Formulario";
+  return "Crear Sector";
 };
 
-const getFormCardTitle = (showCreateForm: boolean, editingSector: Sector | null): string => {
+const getFormCardTitle = (
+  showCreateForm: boolean,
+  editingSector: Sector | null,
+): string => {
   if (showCreateForm) {
     return "Crear Nuevo Sector";
   }
@@ -33,7 +45,10 @@ const getFormCardTitle = (showCreateForm: boolean, editingSector: Sector | null)
   return "Formulario de Sector";
 };
 
-const getFormCardDescription = (showCreateForm: boolean, editingSector: Sector | null): string => {
+const getFormCardDescription = (
+  showCreateForm: boolean,
+  editingSector: Sector | null,
+): string => {
   if (showCreateForm) {
     return "Completa la información del nuevo sector";
   }
@@ -78,7 +93,9 @@ const SectorsView = () => {
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
-          <AlertDescription>Error al cargar los sectores: {error.message}</AlertDescription>
+          <AlertDescription>
+            Error al cargar los sectores: {error.message}
+          </AlertDescription>
         </Alert>
       </div>
     );
@@ -89,27 +106,22 @@ const SectorsView = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-bold text-3xl tracking-tight">Gestión de Sectores</h1>
-          <p className="text-muted-foreground">Administra los sectores de la ciudad y visualízalos en el mapa</p>
+          <h1 className="font-bold text-3xl tracking-tight">
+            Gestión de Sectores
+          </h1>
+          <p className="text-muted-foreground">
+            Administra los sectores de la ciudad y visualízalos en el mapa
+          </p>
         </div>
-        <Button
-          className="gap-2"
-          onClick={() => {
-            setShowCreateForm(true);
-            setEditingSector(null);
-            setActiveTab("form");
-          }}
-        >
-          <Plus className="h-4 w-4" />
-          Nuevo Sector
-        </Button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="font-medium text-sm">Total Sectores</CardTitle>
+            <CardTitle className="font-medium text-sm">
+              Total Sectores
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="font-bold text-2xl">{sectors?.length ?? 0}</div>
@@ -117,7 +129,9 @@ const SectorsView = () => {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="font-medium text-sm">Sectores Activos</CardTitle>
+            <CardTitle className="font-medium text-sm">
+              Sectores Activos
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="font-bold text-2xl">{sectors?.length ?? 0}</div>
@@ -128,12 +142,16 @@ const SectorsView = () => {
             <CardTitle className="font-medium text-sm">Último Creado</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-muted-foreground text-sm">Sin datos disponibles</div>
+            <div className="text-muted-foreground text-sm">
+              Sin datos disponibles
+            </div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="font-medium text-sm">Colores Usados</CardTitle>
+            <CardTitle className="font-medium text-sm">
+              Colores Usados
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex gap-1">
@@ -152,18 +170,26 @@ const SectorsView = () => {
       </div>
 
       {/* Tabs */}
-      <Tabs className="space-y-4" onValueChange={setActiveTab} value={activeTab}>
+      <Tabs
+        className="space-y-4"
+        onValueChange={setActiveTab}
+        value={activeTab}
+      >
         <TabsList>
           <TabsTrigger value="table">Lista de Sectores</TabsTrigger>
           <TabsTrigger value="map">Mapa de Sectores</TabsTrigger>
-          <TabsTrigger value="form">{getFormTabTitle(showCreateForm, editingSector)}</TabsTrigger>
+          <TabsTrigger value="form">
+            {getFormTabTitle(showCreateForm, editingSector)}
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent className="space-y-4" value="table">
           <Card>
             <CardHeader>
               <CardTitle>Sectores Registrados</CardTitle>
-              <CardDescription>Lista completa de sectores con opciones de edición y eliminación</CardDescription>
+              <CardDescription>
+                Lista completa de sectores con opciones de edición y eliminación
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <SectorsTable
@@ -181,8 +207,8 @@ const SectorsView = () => {
             <CardHeader>
               <CardTitle>Mapa de Sectores</CardTitle>
               <CardDescription>
-                Visualiza clientes asignados y no asignados en el mapa. Utiliza los filtros para mostrar diferentes
-                tipos de clientes.
+                Visualiza clientes asignados y no asignados en el mapa. Utiliza
+                los filtros para mostrar diferentes tipos de clientes.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -196,8 +222,12 @@ const SectorsView = () => {
         <TabsContent className="space-y-4" value="form">
           <Card>
             <CardHeader>
-              <CardTitle>{getFormCardTitle(showCreateForm, editingSector)}</CardTitle>
-              <CardDescription>{getFormCardDescription(showCreateForm, editingSector)}</CardDescription>
+              <CardTitle>
+                {getFormCardTitle(showCreateForm, editingSector)}
+              </CardTitle>
+              <CardDescription>
+                {getFormCardDescription(showCreateForm, editingSector)}
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <SectorForm
